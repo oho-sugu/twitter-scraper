@@ -283,6 +283,11 @@ func (timeline *bookmarksTimelineV2) parseTweets() ([]*Tweet, string) {
 					tweets = append(tweets, tweet)
 				}
 			}
+			if entry.Content.ItemContent.TweetResults.Result.Typename == "TweetWithVisibilityResults" {
+				if tweet := entry.Content.ItemContent.TweetResults.Result.parse(); tweet != nil {
+					tweets = append(tweets, tweet)
+				}
+			}
 		}
 	}
 	return tweets, cursor
