@@ -3,6 +3,9 @@ package twitterscraper
 import (
 	"context"
 	"net/url"
+	"encoding/json"
+	"bytes"
+	"io"
 )
 
 // GetBookmarks returns channel with tweets from user bookmarks.
@@ -69,3 +72,37 @@ func (s *Scraper) FetchBookmarks(maxTweetsNbr int, cursor string) ([]*Tweet, str
 	tweets, nextCursor := timeline.parseTweets()
 	return tweets, nextCursor, nil
 }
+
+func (s *Scraper) DeleteBookmark(tweetId string) error {
+	req, err := s.newRequest("POST", "https://twitter.com/i/api/graphql/Wlmlj2-xzyS1GN3a6cj-mQ/DeleteBookmark")
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("content-type", "application/json")
+	variables := map[string]interface{}{
+		"tweet_id":     tweetId,
+	}
+
+	body := map[string]interface{}{
+		"variables": variables,
+		"queryId":   "Wlmlj2-xzyS1GN3a6cj-mQ",
+	}
+
+	b, _ := json.Marshal(body)
+	req.Body = io.NopCloser(bytes.NewReader(b))
+
+	var response struct {
+		Data struct {
+			DeleteBookmark string `json:"tweet_bookmark_delete"`
+		} `json:"data"`
+	}
+
+	err = s.RequestAPI(req, &response)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
