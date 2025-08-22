@@ -28,7 +28,7 @@ func (s *Scraper) FetchBookmarks(maxTweetsNbr int, cursor string) ([]*Tweet, str
 
 	variables := map[string]interface{}{
 		"count":                  maxTweetsNbr,
-		"includePromotedContent": false,
+		"includePromotedContent": true,
 	}
 	features := map[string]interface{}{
 		"graphql_timeline_v2_bookmark_timeline":                                   true,
