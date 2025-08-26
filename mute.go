@@ -1,9 +1,6 @@
 package twitterscraper
 
 import (
-	"context"
-	"net/url"
-	"encoding/json"
 	"bytes"
 	"io"
 )
